@@ -30,19 +30,23 @@ namespace _21_访问者模式
 
 
 
-            List<Shape> list = new List<Shape>();
-            list.Add(new Rectangle());
-            list.Add(new Circle());
-            Visitor1 virtor = new Visitor1();
+            List<Shape> list = new List<Shape> { new Rectangle(2), new Circle(2) };
+            Visitor1 v1 = new Visitor1();
             foreach (Shape shape in list)
             {
-                shape.Accept(virtor);
+                shape.Accept(v1);
+            }
+
+            var v2 = new Visitor2();
+            foreach (Shape shape in list)
+            {
+                shape.Accept(v2);
             }
 
             Console.ReadKey();
         }
     }
-    
+
 
 
     public abstract class Shape
@@ -53,6 +57,12 @@ namespace _21_访问者模式
 
     public class Rectangle : Shape
     {
+        public double Width { get; set; }
+
+        public Rectangle(double width)
+        {
+            Width = width;
+        }
 
         public override void Accept(ShapeVisitor visitor)
         {
@@ -63,6 +73,13 @@ namespace _21_访问者模式
 
     public class Circle : Shape
     {
+        public double Radius { get; set; }
+
+        public Circle(double radius)
+        {
+            Radius = radius;
+        }
+
         public override void Accept(ShapeVisitor visitor)
         {
             visitor.Visit(this);
@@ -87,12 +104,12 @@ namespace _21_访问者模式
     {
         public override void Visit(Rectangle shape)
         {
-            Console.WriteLine("访问者1针对Rectangle的操作！");
+            Console.WriteLine($"{shape.GetType().Name} 的周长是:" + shape.Width * 4);
         }
 
         public override void Visit(Circle shape)
         {
-            Console.WriteLine("访问者1针对Circle的操作！");
+            Console.WriteLine($"{shape.GetType().Name} 的周长是:" + Math.PI * 2 * shape.Radius);
         }
     }
 
@@ -100,12 +117,12 @@ namespace _21_访问者模式
     {
         public override void Visit(Rectangle shape)
         {
-            Console.WriteLine("访问者2针对Rectangle的操作！");
+            Console.WriteLine($"{shape.GetType().Name} 的面积是:" + shape.Width * shape.Width);
         }
 
         public override void Visit(Circle shape)
         {
-            Console.WriteLine("访问者2针对Circle的操作！");
+            Console.WriteLine($"{shape.GetType().Name} 的面积是:" + Math.PI * shape.Radius * shape.Radius);
         }
     }
 }
